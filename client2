@@ -1,0 +1,35 @@
+## Client 2
+#### Ouverture du fichier cvs fait en Big Data
+data_file="C:/Users/melis/Downloads/export_IA.csv"
+import pandas as pd
+
+data = pd.read_csv(data_file)
+print(data.columns)
+#### Extraction des coordoonées
+coordonnees=[]
+
+def recu_coordonnee(data,coordonnees):
+    quantite=len(data.consolidated_latitude)
+    for k in range(quantite):
+        latitude=data.consolidated_latitude[k]
+        longitude=data.consolidated_longitude[k]
+        coordonnees.append((latitude,longitude))
+    return coordonnees
+        
+
+coordonnees=recu_coordonnee(data,coordonnees)
+print(coordonnees)
+print(coordonnees[1:10])
+### Etude des clusters
+#### V1
+from sklearn.datasets import make_blobs
+import numpy as np
+X, y = make_blobs(n_samples=2000, centers=coordonnees, random_state=7)
+import matplotlib.pyplot as plt
+def plot_clusters(X, y=None):
+  plt.scatter(X[:, 0], X[:, 1], c=y, s=1)
+  plt.xlabel("$x_1$", fontsize=14)
+  plt.ylabel("$x_2$", fontsize=14, rotation=0)
+plt.figure(figsize=(8, 4))
+plot_clusters(X, y)
+plt.show()
