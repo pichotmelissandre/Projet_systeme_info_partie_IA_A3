@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques par Départements - Dashboard IRVE</title>
+    <!-- Importation des polices de la charte graphique -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Importation de Plotly.js pour les graphiques -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Dashboard IRVE</h1>
+        <nav>
+            <a href="#">Accueil</a>
+            <a href="#">Visualisation</a>
+            <a href="#" class="active">Statistiques</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Statistiques Départementales</h2>
+            
+            <!-- Le fameux menu déroulant -->
+            <div class="filter-section">
+                <label for="select-departement">Sélectionnez un département :</label>
+                <select id="select-departement">
+                    <option value="">-- Choisir --</option>
+                    <option value="75">75 - Paris</option>
+                    <option value="13">13 - Bouches-du-Rhône</option>
+                    <option value="69">69 - Rhône</option>
+                    <!-- On remplira le reste dynamiquement avec PHP plus tard -->
+                </select>
+            </div>
+        </div>
+
+        <!-- La grille du tableau de bord (Dashboard) -->
+        <section class="dashboard-grid">
+            
+            <!-- Carte 1 : Chiffre global -->
+            <div class="stat-card">
+                <h3>Total des stations</h3>
+                <div id="stat-total" class="big-number">-</div>
+            </div>
+
+            <!-- Carte 2 : Graphique Camembert -->
+            <div class="stat-card">
+                <h3>Gratuit vs Payant</h3>
+                <div id="chart-gratuit" class="chart-container"></div>
+            </div>
+
+            <!-- Carte 3 : Graphique en Barres -->
+            <div class="stat-card">
+                <h3>Top 5 Communes</h3>
+                <div id="chart-communes" class="chart-container"></div>
+            </div>
+
+            <!-- Carte 4 : Graphique en Anneau -->
+            <div class="stat-card">
+                <h3>Répartition Puissance</h3>
+                <div id="chart-puissance" class="chart-container"></div>
+            </div>
+
+        </section>
+    </main>
+    <script>// On attend que la page soit totalement chargée
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // On cible notre menu déroulant
+        const selectDept = document.getElementById('select-departement');
+        
+        // On écoute l'événement "change" (quand l'utilisateur choisit un nouveau département)
+        selectDept.addEventListener('change', function() {
+            const deptId = this.value;
+            
+            // Si l'utilisateur revient sur "-- Choisir --", on ne fait rien
+            if(deptId === "") return;
+            
+            // 1. LA REQUÊTE AJAX (Communication avec le serveur PHP)
+            fetch(`api_statistiques.php?departement=${deptId}`)
+                .then(response => response.json()) // On convertit la réponse en JSON
+                .then(data => {
+                    
+                    // Si le PHP renvoie une erreur, on l'affiche dans la console
+                    if(data.erreur) {
+                        console.error(data.erreur);
+                        return;
+                    }
+
+                    // 2. MISE À JOUR DU GROS CHIFFRE
+                    document.getElementById('stat-total').innerText = data.total_stations;
+
+                    // 3. CRÉATION DES GRAPHIQUES AVEC PLOTLY
+                    
+                    // Couleurs de ta charte graphique pour les graphiques
+                    const couleursEcoTech = ['#2563EB', '#10B981', '#1E293B', '#C3BDBD', '#EF4444'];
+
+                    // --- Graphique 1 : Gratuit vs Payant (Camembert) ---
+                    const labelsGratuit = data.gratuit_payant.map(item => item.gratuit == 1 ? "Gratuit" : "Payant");
+                    const valeursGratuit = data.gratuit_payant.map(item => item.compte);
+                    
+                    const traceGratuit = [{
+                        values: valeursGratuit,
+                        labels: labelsGratuit,
+                        type: 'pie',
+                        marker: { colors: ['#10B981', '#2563EB'] } // Vert pour gratuit, Bleu pour payant
+                    }];
+                    Plotly.newPlot('chart-gratuit', traceGratuit, {margin: {t: 10, b: 10, l: 10, r: 10}});
+
+                    // --- Graphique 2 : Top 5 des Communes (Barres) ---
+                    const labelsCommunes = data.top_communes.map(item => item.commune);
+                    const valeursCommunes = data.top_communes.map(item => item.compte);
+                    
+                    const traceCommunes = [{
+                        x: labelsCommunes,
+                        y: valeursCommunes,
+                        type: 'bar',
+                        marker: { color: '#2563EB' }
+                    }];
+                    Plotly.newPlot('chart-communes', traceCommunes, {margin: {t: 20, b: 40, l: 30, r: 10}});
+
+                    // --- Graphique 3 : Répartition Puissance (Anneau / Donut) ---
+                    const labelsPuissance = data.puissances.map(item => item.puissance_nominale + " kW");
+                    const valeursPuissance = data.puissances.map(item => item.compte);
+                    
+                    const tracePuissance = [{
+                        values: valeursPuissance,
+                        labels: labelsPuissance,
+                        type: 'pie',
+                        hole: 0.4, // C'est ça qui transforme le camembert en anneau
+                        marker: { colors: couleursEcoTech }
+                    }];
+                    Plotly.newPlot('chart-puissance', tracePuissance, {margin: {t: 10, b: 10, l: 10, r: 10}});
+                    
+                })
+                .catch(error => console.error("Erreur AJAX :", error));
+        });
+    });</script>
+</body>
+</html>

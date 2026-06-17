@@ -1,0 +1,120 @@
+/* Variables de la Charte Graphique */
+:root {
+    --bleu-electrique: #2563EB;
+    --vert-energie: #10B981;
+    --bleu-nuit: #1E293B;
+    --gris-nuage: #F1F5F9;
+    --blanc: #FFFFFF;
+    
+    --font-titre: 'Montserrat', sans-serif;
+    --font-texte: 'Open Sans', sans-serif;
+    
+    --shadow-soft: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --radius: 8px;
+}
+
+/* Styles Globaux*/
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--gris-nuage);
+    font-family: var(--font-texte);
+    color: var(--bleu-nuit);
+}
+
+h1, h2, h3 {
+    font-family: var(--font-titre);
+    margin-top: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* En-tête et Navigation */
+.main-header {
+    background-color: var(--bleu-nuit);
+    color: var(--blanc);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-header nav a {
+    color: var(--blanc);
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 600;
+}
+
+.main-header nav a.active {
+    color: var(--vert-energie);
+}
+
+/* Contrôles (Menu déroulant) */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.filter-section select {
+    padding: 0.5rem 1rem;
+    font-family: var(--font-texte);
+    font-weight: 600;
+    font-size: 1rem;
+    border: 1px solid #CBD5E1;
+    border-radius: var(--radius);
+    outline: none;
+    cursor: pointer;
+    background-color: var(--blanc);
+}
+
+.filter-section select:focus {
+    border-color: var(--bleu-electrique);
+}
+
+/* Grille du Tableau de Bord (Dashboard) */
+.dashboard-grid {
+    display: grid;
+    /* Crée une grille de 2 colonnes de largeur égale */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+/* Style des cartes contenant les statistiques */
+.stat-card {
+    background-color: var(--blanc);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-card h3 {
+    font-size: 1.1rem;
+    color: var(--bleu-electrique);
+    border-bottom: 2px solid var(--gris-nuage);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Style spécifique pour le gros chiffre */
+.big-number {
+    font-family: var(--font-titre);
+    font-size: 4rem;
+    color: var(--vert-energie);
+    text-align: center;
+    margin: auto;
+}
+
+/* Conteneur pour s'assurer que Plotly prend bien l'espace */
+.chart-container {
+    height: 300px;
+    width: 100%;
+}
