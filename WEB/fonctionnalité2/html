@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr" >
+<head>
+  <meta charset="utf-8">
+  <title>Titre de la page</title>
+  <link rel="stylesheet" href="style.css">
+
+  <<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script src="script_get_bornes.js" defer></script>
+
+</head>
+
+
+
+<body>
+  <header>
+  <img id=image_1 src="charging-station.png">
+  <h1>Projet A3</h1>
+  <nav>
+    <ul>
+
+      <li class="deroulant">
+        <a href="#">Menu ▾</a>
+        <ul class="sous">
+          <li><a href="page_d_accueil.html">Accueil</a></li>
+          <li><a href="points_de_charge.html">Points de charge</a></li>
+          <li><a href="statistiques_des_stations.html">Statistiques des stations</a></li>
+          <li><a href="prediction_cluster.html">Prédiction des clusters</a></li>
+          <li><a href="prediction_type_implantation.html">Prédiction du type d'implantation</a></li>
+          <li><a href="prediction_puissance_nominale.html">Prédiction de la puissance nominale</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+	<main class="d-flex align-items-center justify-content-center bg">
+		<section>
+			<h2 class="text-center mb-4">Points de charges</h2>
+
+        <div id="loading-msg-tab" style="text-align: center; padding: 40px; color: #64748B;">
+            Chargement des points de charges en cours ...
+        </div>
+
+			<div id="mtab_bornes"></div>
+		</section>
+
+    <section>
+			<h2 class="text-center mb-4">Répartitions des points de charges</h2>
+
+        <div id="loading-msg-map" style="text-align: center; padding: 40px; color: #64748B;">
+            Chargement de la carte en cours ...
+        </div>
+
+			<div id="maps_bornes"></div>
+		</section>
+	</main>
+
+
+
+
+
+
+
+
+<footer>
+  <hr>
+    <div class="footer-info">
+      <img id=logo src="logo.png">
+      <p class="footer-text">Projet systèmes informatiques - étude des données IRVE — Big Data, IA & Web</p>
+      <a href="https://isen-ouest.fr/">ISEN Yncréa ouest</a>
+      <br>
+      <a href="https://schema.data.gouv.fr/etalab/schema-irve-statique/">IRVE data.gouv</a>
+
+    </div>
+    <div class="footer-credits">
+      <p> &copy; ISEN Brest A3 - 2025_2026  </p>
+      <p class="tech-stack">Trinôme 6 - PICHOT | NOUMBO MOYAP | LE CALVEZ</p>
+    </div>
+</footer>
+
+</body>
+</html>
