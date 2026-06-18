@@ -1,0 +1,44 @@
+<?php
+// connexion à la base de données réduite
+$pdo = new PDO(
+    'mysql:host=127.0.0.1;dbname=nm_frede;charset=utf8mb4',
+    'nm_frede',
+    'nM24-Y4ZG3OtKGNv'
+);
+
+// Récupération des bornes
+$query = '
+    SELECT 
+        b.id_pdc_itinerance, 
+        b.puissance_nominale_level,
+        s.consolidated_latitude, 
+        s.consolidated_longitude, 
+        s.nom_station, 
+        s.tarif_level,
+        e.nom_enseigne
+    FROM borne b
+    INNER JOIN station s ON b.nom_station = s.nom_station
+    INNER JOIN enseigne e ON s.nom_enseigne = e.nom_enseigne
+';$bornes = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
+
+$donnees_finales = [];
+
+////////// tableau
+
+foreach ($bornes as $borne) {
+    $donnees_finales[] = [
+        "id_station"   => $borne['id_pdc_itinerance'],
+        "nom_station"  => $borne['nom_station'],
+        "nom_enseigne" => $borne['nom_enseigne'],
+        "latitude"     => (float)$borne['consolidated_latitude'],  // Forçage en nombre décimal
+        "longitude"    => (float)$borne['consolidated_longitude'], // Forçage en nombre décimal
+        "puissance"    => $borne['puissance_nominale_level'],
+        "tarif"        => $borne['tarif_level']
+    ];
+}
+
+
+// 4. Envoi du résultat final au format JSON propre pour la carte
+header('Content-Type: application/json');
+echo json_encode($donnees_finales);
+?>
