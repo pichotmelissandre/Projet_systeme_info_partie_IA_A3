@@ -1,0 +1,70 @@
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // 1. Appel du fichier PHP que l'on vient de créer
+        fetch('cluster_maps_mp.php')        
+        .then(response => response.json())
+        .then(bornes => {
+            
+            // Masquer le message de chargement de ton HTML
+            if(document.getElementById('loading-msg')) {
+                document.getElementById('loading-msg').style.display = 'none';
+            }
+            
+            // Rendre le bloc de la carte visible
+            const mapContainer = document.getElementById('map-clusters');
+            mapContainer.style.display = 'block';
+            
+            // 2. TRACER LE FOND DE CARTE (Centré sur la France, zoom 6)
+            const map = L.map('map-clusters').setView([46.6033, 1.8883], 6);
+
+            // Ajout carte
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 18,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            // 3. Fonction pour attribuer une couleur selon le cluster de ton modèle
+            function obtenirCouleur(clusterId) {
+                if (clusterId === -1) return "#64748B"; // Gris pour les zones isolées
+
+                const palette = { // couleur fixe pour les grand cluster principaux
+                    30: "#8B5CF6", 
+                    1:  "#2563EB", 
+                    2:  "#10B981", 
+                    3:  "#EF4444", 
+                    4:  "#F59E0B"  
+                };
+
+                // Si le cluster n'est pas dans la liste, on génère une couleur automatique
+                return palette[clusterId] || `hsl(${(clusterId * 65) % 360}, 70%, 50%)`;
+            }
+
+            // 4. AJOUTER LES NOUVELLES DONNÉES SUR LA CARTE
+            bornes.forEach(borne => {
+                const couleurPoint = obtenirCouleur(borne.cluster);
+
+                // Ajout d'un marqueur circulaire pour chaque borne
+                L.circleMarker([borne.latitude, borne.longitude], {
+                    radius: 5,                  
+                    fillColor: couleurPoint,    
+                    color: "#FFFFFF",           
+                    weight: 1,                  
+                    opacity: 1,
+                    fillOpacity: 0.8            
+                })
+                .addTo(map)
+                // information interactive au clic de la souris
+                .bindPopup(`
+                    <b>Borne n°${borne.id}</b><br>
+                    Coordonnées : (${borne.latitude}, ${borne.longitude})<br>
+                    <b>Secteur : ${borne.cluster === -1 ? 'Zone Isolée' : 'Cluster #' + borne.cluster}</b>
+                `);
+            });
+
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            const msg = document.getElementById('loading-msg');
+            if(msg) msg.innerText = "Erreur lors du chargement des clusters de la base.";
+        });
+});
