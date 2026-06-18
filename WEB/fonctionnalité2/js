@@ -1,0 +1,85 @@
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // Appel du fichier PHP
+    fetch('point_de_charge_tab_maps_mp.php')
+        .then(response => response.json())
+        .then(bornes => {
+            
+            // tableau
+            document.getElementById('loading-msg-tab').style.display = 'none';
+            
+            let codeTableau = `
+                <table class="table-irve">
+                    <thead>
+                        <tr>
+                            <th>ID Station</th>
+                            <th>Enseigne</th>
+                            <th>Nom de la Station</th>
+                            <th>Puissance (kW)</th>
+                            <th>Tarification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // Ajout d'une ligne pour chaque borne
+            bornes.forEach(borne => {
+                codeTableau += `
+                    <tr>
+                        <td><b>${borne.id_station || 'N/A'}</b></td>
+                        <td>${borne.nom_enseigne || 'Inconnue'}</td>
+                        <td>${borne.nom_station || 'Non renseigné'}</td>
+                        <td>${borne.puissance || 'N/A'}</td>
+                        <td>${borne.tarif || 'Non spécifié'}</td>
+                    </tr>
+                `;
+            });
+            
+            codeTableau += `</tbody></table>`;
+            document.getElementById('mtab_bornes').innerHTML = codeTableau;
+
+
+            // carte
+            document.getElementById('loading-msg-map').style.display = 'none';
+            
+            const conteneurCarte = document.getElementById('maps_bornes');
+            conteneurCarte.style.display = 'block'; 
+            
+            // Initialisation de la carte (centrée sur la France)
+            const map = L.map('maps_bornes').setView([46.6033, 1.8883], 6);
+            
+            // Correction du bug du carré blanc lié au display:none initial
+            map.invalidateSize();
+
+            // Chargement du fond de carte OpenStreetMap moderne
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 18,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            // Ajout des bornes sur la carte sous forme de bulles interactives
+            bornes.forEach(borne => {
+                if (borne.latitude && borne.longitude) {
+                    L.circleMarker([borne.latitude, borne.longitude], {
+                        radius: 5,
+                        fillColor: "#2563EB", 
+                        color: "#FFFFFF",     
+                        weight: 1,
+                        fillOpacity: 0.8
+                    })
+                    .addTo(map)
+                    .bindPopup(`
+                        <b>${borne.nom_enseigne || 'Station IRVE'}</b><br>
+                        ${borne.nom_station || ''}<br>
+                        Puissance : ${borne.puissance || 'N/A'} kW
+                    `);
+                }
+            });
+
+        })
+        .catch(error => {
+            console.error("Erreur générale :", error);
+            document.getElementById('loading-msg-tab').innerText = "Erreur lors de l'extraction des données SQL.";
+            document.getElementById('loading-msg-map').innerText = "Erreur lors du tracé du fond de carte.";
+        });
+});
