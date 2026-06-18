@@ -1,0 +1,65 @@
+<?php
+// connexion à la base de données réduite
+$pdo = new PDO(
+    'mysql:host=127.0.0.1;dbname=nm_frede;charset=utf8mb4',
+    'nm_frede',
+    'nM24-Y4ZG3OtKGNv'
+);
+
+// Récupération des bornes
+$query = '
+    SELECT 
+        b.id_pdc_itinerance, 
+        s.consolidated_latitude, 
+        s.consolidated_longitude
+
+    FROM borne b
+    INNER JOIN station s ON b.nom_station = s.nom_station
+    INNER JOIN enseigne e ON s.nom_enseigne = e.nom_enseigne ';
+
+$bornes = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);    
+$donnees_finales = [];
+$fichier_input = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'irve_input_' . uniqid() . '.txt';// 2. Boucle sur chaque borne de ta table
+foreach ($bornes as $borne) {
+    $lat = (float)$borne['consolidated_latitude'];
+    $lon = (float)$borne['consolidated_longitude'];
+
+
+
+    // on écrit les coordonnées dans un fichier temporaire 
+    file_put_contents($fichier_input, $lat . "\n" . $lon . "\n");
+
+    $output = [];
+    $result_code = null;
+    
+    // On exécute le script python en lui injectant le fichier texte
+    exec("python3 script_client2.py < " . escapeshellarg($fichier_input), $output, $result_code);
+    // On rassemble toute la réponse textuelle de Python
+    $texte_reponse = implode(" ", $output);
+
+    // Par défaut, on considère que c'est une zone isolée (-1)
+    $cluster_id = -1;
+
+    // Analyse du texte (Parsing) : si Python a écrit "cluster n°30", on extrait le 30
+    if (preg_match('/n°(-?\d+)/', $texte_reponse, $matches)) {
+        $cluster_id = (int)$matches[1];
+    }
+
+    // On prépare la borne avec son cluster trouvé pour le JavaScript
+    $donnees_finales[] = [
+        "id" => $borne['id'],
+        "latitude" => (float)$lat,
+        "longitude" => (float)$lon,
+        "cluster" => $cluster_id
+    ];
+}
+
+// 3. Nettoyage du fichier temporaire de saisie
+if (file_exists($fichier_input)) {
+    unlink($fichier_input);
+}
+
+// 4. Envoi du résultat final au format JSON propre pour la carte
+header('Content-Type: application/json');
+echo json_encode($donnees_finales);
+?>
