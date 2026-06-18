@@ -1,4 +1,5 @@
-
+/*---------------------------------------------------------------------------------------*/
+/* charte graphique */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@300;400;600&display=swap');
 
 :root {
@@ -25,7 +26,7 @@ body {
   background-color: var(--bg-page);
   color: var(--text-main);
   font-family: 'Open Sans', sans-serif;
-  font-weight: 400; /* Regular par défaut */
+  font-weight: 400; 
   line-height: 1.6;
   padding: 40px 20px;
   max-width: 1100px;
@@ -45,24 +46,24 @@ hr {
   margin: 30px 0;
 }
 
-/* Hide initial hrs used as raw padding dividers to keep layout clean */
 body > hr {
   display: none; 
 }
 
 
-/* Style général du Header */
+/*---------------------------------------------------------------------------------------*/
+/* Header */
+
 header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   background-color: var(--text-main);
   color: white;
-  padding: 15px;
+  padding: 12px 25px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  margin-top: 40px;  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin-bottom: 25px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 40px;
 }
 
 header h1 {
@@ -71,7 +72,17 @@ header h1 {
   color: #FFFFFF;
 }
 
-/* Structure de la navigation */
+#image_1{
+  width: auto;
+  height: 40px;
+  margin-right: 15px;
+  box-shadow: var(--box-shadow);
+}
+
+nav {
+  margin-left: auto; 
+}
+
 nav ul {
   list-style: none;
   margin: 0;
@@ -119,12 +130,82 @@ nav ul li a {
 
 /* Effets au survol (Hover) */
 .deroulant .sous li a:hover {
-  background-color: #1abc9c; /* Couleur turquoise dynamique */
+  background-color: #1abc9c; 
 }
 
 .deroulant:hover .sous {
-  display: block; /* S'affiche au survol du bouton Menu */
+  display: block; 
 }
+
+/*---------------------------------------------------------------------------------------*/
+/* Footer */
+
+footer {
+  background-color: var(--text-main); 
+  color: var(--bg-container);        
+  padding: 15px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-top: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .footer-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+}
+
+#logo {
+  float: right;           
+  height: 60px;           
+  width: auto;            
+  margin-left: 20px;      
+}
+
+.footer-info {
+  overflow: hidden; 
+}
+
+
+.footer-text {
+  font-weight: 300; 
+  font-size: 0.9rem;
+  color: #94A3B8;    
+  margin-top: 5px;
+}
+
+.footer-credits {
+  font-size: 0.9rem;
+  font-weight: 400; 
+}
+
+@media (min-width: 768px) {
+  .footer-credits {
+    text-align: right;
+  }
+}
+
+.tech-stack {
+  font-size: 0.75rem;
+  font-weight: 600; 
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/* FONCTIONNALITÉ 1 */
 
 #image {
   display: block;
@@ -138,13 +219,13 @@ nav ul li a {
 pre {
   background-color: var(--bg-container);
   font-family: 'Open Sans', sans-serif;
-  font-weight: 300; /* Light pour les textes descriptifs */
+  font-weight: 300; 
   font-size: 1.1rem;
   color: var(--text-main);
   padding: 25px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  white-space: pre-wrap; /* Évite le scroll horizontal du PRE */
+  white-space: pre-wrap; 
   text-align: center;
   margin-bottom: 30px;
 }
@@ -162,7 +243,7 @@ section {
 
 section h2 {
   font-size: 1.6rem;
-  border-bottom: 3px solid var(--accent-color); /* Accent Vert Énergie */
+  border-bottom: 3px solid var(--accent-color); 
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
@@ -190,7 +271,6 @@ section p {
 
 }
 
-/* Supprime la bordure pointillée pour le dernier élément */
 section p:last-of-type {
   border-bottom: none;
   padding-bottom: 0;
@@ -208,70 +288,51 @@ body > div h3 {
   color: var(--text-main);
 }
 
-footer {
-  background-color: var(--text-main); /* Utilisation du Bleu Nuit pour le fond */
-  color: var(--bg-container);        /* Texte en blanc pour le contraste */
-  padding: 30px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  margin-top: 40px;
-  font-family: 'Open Sans', sans-serif;
+
+
+/*---------------------------------------------------------------------------------------*/
+/* FONCTIONNALITÉ 2 */
+
+
+.table-irve {
+  width: 100%;
+  border-collapse: collapse; 
+  margin-top: 10px;
 }
 
-.footer-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  text-align: center;
+.table-irve th, .table-irve td {
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  text-align: left;
 }
 
-@media (min-width: 768px) {
-  .footer-container {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    text-align: left;
-  }
+.table-irve th {
+  background-color: #1e293b;
+  color: white;
 }
 
-.footer-logo {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 1.2rem;
-  letter-spacing: 1px;
+#maps_bornes {
+  height: 550px;
+  width: 100%;
+  border-radius: var(--border-radius, 8px);
+  box-shadow: var(--box-shadow, 0 4px 6px rgba(0,0,0,0.1));
+  display: none; /* Masqué au départ, JavaScript l'affichera dès que les données seront prêtes */
+  margin-top: 20px;
 }
 
-.footer-logo span {
-  color: var(--accent-color); 
-  font-size: 0.85rem;
-  display: block;
-  font-weight: 300;
-  font-family: 'Open Sans', sans-serif;
-}
 
-.footer-text {
-  font-weight: 300; 
-  font-size: 0.9rem;
-  color: #94A3B8;    
-  margin-top: 5px;
-}
 
-.footer-credits {
-  font-size: 0.9rem;
-  font-weight: 400; 
-}
 
-@media (min-width: 768px) {
-  .footer-credits {
-    text-align: right;
-  }
-}
 
-.tech-stack {
-  font-size: 0.75rem;
-  font-weight: 600; 
-  background-color: rgba(37, 99, 235, 0.1); 
-  border-radius: 4px;
-  display: inline-block;
-  margin-top: 5px;
+
+/*---------------------------------------------------------------------------------------*/
+/* FONCTIONNALITÉ 4 */
+
+#map-clusters {
+  height: 550px;
+  width: 100%;
+  border-radius: var(--border-radius, 8px);
+  box-shadow: var(--box-shadow, 0 4px 6px rgba(0,0,0,0.1));
+  display: none; /* Masqué au départ, JavaScript l'affichera dès que les données seront prêtes */
+  margin-top: 20px;
 }
