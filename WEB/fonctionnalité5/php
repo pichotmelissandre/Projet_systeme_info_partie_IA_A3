@@ -1,0 +1,50 @@
+<?php
+require "DB_connect.php";
+
+$id = $_POST["selected_point"];
+$choix = $_POST["choix_prediction"];
+
+// Récupération des infos du point de charge
+$sql = "SELECT * FROM borne WHERE id_borne = :id";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([":id" => $id]);
+$borne = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// On sauvegarde les données dans un fichier JSON temporaire
+file_put_contents("input.json", json_encode($borne));
+
+// Choix du script Python
+if ($choix === "implantation") {
+    $cmd = "python3 predict_implantation.py";
+} else {
+    $cmd = "python3 predict_puissance.py";
+}
+
+// Exécution du script Python
+$output = shell_exec($cmd);
+
+// Décodage du JSON renvoyé par Python
+$result = json_decode($output, true);
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultat de la prédiction</title>
+</head>
+<body>
+
+<h2>Résultat de la prédiction</h2>
+
+<p><b>ID du point :</b> <?= $id ?></p>
+
+<?php if ($choix === "implantation"): ?>
+    <p><b>Implantation prédite :</b> <?= $result["prediction"] ?></p>
+<?php else: ?>
+    <p><b>Puissance nominale prédite :</b> <?= $result["prediction"] ?> kW</p>
+<?php endif; ?>
+
+<p><b>Modèle utilisé :</b> <?= $result["model"] ?></p>
+
+</body>
+</html>
