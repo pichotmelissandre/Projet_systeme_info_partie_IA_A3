@@ -1,55 +1,43 @@
-Cahier des charges : 
+Description des fichiers 
 
-Analyse : 
+- Fonctionnalité 1 : Accueil
+    HTML : page_d_accueil.html 
+    CSS : style.css 
+    Illustrations : 
+        logo : charging-station.png
+        première image : images_bornes.png
+        graphique : Immatriculations_et_parc_de_VE_et_VHR
+        logo ISEN : logo.png
 
-  Diagramme de Gantt 
-  
-  Charte graphique 
-  
-  Maquette figma 
-  
-  MCD 
-  
-  Interface client-serveur 
+- Fonctionnalité 2 : Points de charge (tableau et carte)
+    HTML : points_de_charge.html
+    CSS : style.css
+    JavaScript : script_get_bornes.js
+    PHP : point_de_charge_tab_maps_mp.php
+    Illustrations : 
+        icône en-tête : charging-station.png
 
-Fonctionnalité 1 – page d’accueil : 
+- Fonctionnalité 3 : Statistiques des stations
+    HTML : statistiques_des_stations.html
+    CSS : style_FN.css
+    PHP : prediction_FN.php
+    JavaScript : statistiques.js
 
-  Menu de navigation 
-  
-  Descriptif du projet 
-  
-  Image représentant le projet 
+- Fonctionnalité 4 : Prédiction en masse des clusters
+    HTML : prediction_cluster.html
+    CSS : style.css
+    JavaScript : script_maps_cluster_mp.js
+    PHP : cluster_maps_mp.php
+    Python : script_client2.py
+            modele_hdbscan_optimal.pkl
 
-Fonctionnalité 2 – visualisation des points de charge et tableau stations : 
+- Fonctionnalité 5 : Prédiction de la puissance nominale et de l'implantation (Machine Learning)
+    HTML : prediction_puissance_nominale.html
+    HTML secondaire : prediction_type_implantation.html
+    CSS : style_FN.css
+    PHP : get_prediction_puissance.php
+    Python : predict_puissance.py
+             predict_implantation.py
+             Random Forest : modele_puissance.pkl
+             LabelEncoder : encoder_implantation.pkl
 
-  Visualisation des points de charge dans un tableau avec au moins 6 informations 
-  
-  Visualisation des stations sur une carte avec 4 informations visibles aux cliques de la souris 
-
-Fonctionnalité 3 – affichage statistiques sur les stations : 
-
-   Calcul est représentation d’au minimum 4 statistiques (au choix) sur les stations d’un département avec la sélection des départements dans un menu déroulant. 
-
-Fonctionnalité 4 - prédiction du cluster des points de charge : 
-
-  Bouton cliquable sous le tableau de visualisation des points de charge “Prédire les clusters” 
-  
-  Nouvelle page web 
-  
-  Appel du script python permettant la prédiction des cluster (IA- client) 
-  
-  Affichage des points de charges avec une couleur par cluster 
-
-Fonctionnalité 5 - prédiction du type d’implantation et de la puissance nominale : 
-
-  Bouton radio pour sélectionner un point de charge dans le tableau 
-  
-  Bouton cliquable “prédire la puissance nominale” & “prédire l’implantation” en bas de la page de visualisation 
-  
-  Ouverture nouvelle page 
-  
-  Appel script python de prédiction  
-  
-  Affichage du résultat comparatif des méthodes de classification réalisées en IA (voir dans quelle mesure la valeur prédite correspond à la valeur réelle) 
-
-TOTAL : 5 pages WEB 
