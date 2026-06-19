@@ -1,0 +1,47 @@
+<?php
+require "DB_connect.php";
+
+$dep = $_GET["dep"];
+
+// 1. Nombre de stations
+$sql1 = "SELECT COUNT(*) AS nb FROM station WHERE code_insee_commune = :dep";
+$stmt1 = $pdo->prepare($sql1);
+$stmt1->execute([":dep" => $dep]);
+$nb_stations = $stmt1->fetch(PDO::FETCH_ASSOC)["nb"];
+
+// 2. Nombre de bornes
+$sql2 = "SELECT COUNT(*) AS nb FROM borne 
+         JOIN station ON borne.nom_station = station.nom_station
+         WHERE station.code_insee_commune = :dep";
+$stmt2 = $pdo->prepare($sql2);
+$stmt2->execute([":dep" => $dep]);
+$nb_bornes = $stmt2->fetch(PDO::FETCH_ASSOC)["nb"];
+
+// 3. Puissance moyenne
+$sql3 = "SELECT AVG(puissance_nominale) AS avgp FROM borne 
+         JOIN station ON borne.nom_station = station.nom_station
+         WHERE station.code_insee_commune = :dep";
+$stmt3 = $pdo->prepare($sql3);
+$stmt3->execute([":dep" => $dep]);
+$puissance_moyenne = round($stmt3->fetch(PDO::FETCH_ASSOC)["avgp"], 2);
+
+// 4. Taux PMR
+$sql4 = "SELECT COUNT(*) AS total,
+                SUM(accessibilite_pmr = 'Oui') AS pmr
+         FROM station
+         WHERE code_insee_commune = :dep";
+$stmt4 = $pdo->prepare($sql4);
+$stmt4->execute([":dep" => $dep]);
+$row = $stmt4->fetch(PDO::FETCH_ASSOC);
+
+$taux_pmr = ($row["total"] > 0)
+    ? round(($row["pmr"] / $row["total"]) * 100, 2)
+    : 0;
+
+echo json_encode([
+    "nb_stations" => $nb_stations,
+    "nb_bornes" => $nb_bornes,
+    "puissance_moyenne" => $puissance_moyenne,
+    "taux_pmr" => $taux_pmr
+]);
+?>
